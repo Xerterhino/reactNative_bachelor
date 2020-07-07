@@ -1,0 +1,1 @@
+export const LOCAL_NETWORK_ADRESS = "http://192.168.178.20:8080/"
