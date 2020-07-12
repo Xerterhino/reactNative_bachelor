@@ -10,6 +10,8 @@ import { MenuButton } from "../components/MenuButton";
 import { routingCtx } from "../utils/routing/routingContext";
 import {createActivity, deleteActivity, fetchAllActivies} from "../actions/activities";
 import ActivityCard from "../components/ActivityCard";
+import PushNotification from "react-native-push-notification";
+import BackgroundFetch from "react-native-background-fetch";
 
 export const ActivityScrollView = props => {
     const { actions } = useContext(routingCtx);
@@ -17,7 +19,29 @@ export const ActivityScrollView = props => {
     const [activities, setActivies] = useState([]);
     const [todos, setTodos] = useState([]);
     const [reload, setReload] = useState(false);
+    //
 
+
+    // BackgroundFetch.configure({
+    //     minimumFetchInterval: 15,     // <-- minutes (15 is minimum allowed)
+    //     // Android options
+    //     forceAlarmManager: false,     // <-- Set true to bypass JobScheduler.
+    //     stopOnTerminate: false,
+    //     startOnBoot: true,
+    //     requiredNetworkType: BackgroundFetch.NETWORK_TYPE_NONE, // Default
+    //     requiresCharging: false,      // Default
+    //     requiresDeviceIdle: false,    // Default
+    //     requiresBatteryNotLow: false, // Default
+    //     requiresStorageNotLow: false  // Default
+    // }, async (taskId) => {
+    //     console.log("[js] Received background-fetch event: ", taskId);
+    //     // Required: Signal completion of your task to native code
+    //     // If you fail to do this, the OS can terminate your app
+    //     // or assign battery-blame for consuming too much background-time
+    //     BackgroundFetch.finish(taskId);
+    // }, (error) => {
+    //     console.log("[js] RNBackgroundFetch failed to start");
+    // });
 
     useEffect(() => {
         handleAndroidBackButton(() => {
@@ -81,6 +105,7 @@ export const ActivityScrollView = props => {
     const addActivity = async (name) => {
         try {
             const response = await createActivity(name);
+            onGoToDetails(response);
         }   catch (e) {
             console.error(e)
         }

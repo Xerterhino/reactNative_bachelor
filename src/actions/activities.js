@@ -3,7 +3,10 @@ import { LOCAL_NETWORK_ADRESS } from "../constants/ipAddress";
 import { endpointWithParams } from "../utils/endpoint";
 
 export const fetchAllActivies = async () => {
+  console.log("FETCH")
   const response = await axios.get(`${LOCAL_NETWORK_ADRESS}api/activity`);
+  console.log("END FETCH", LOCAL_NETWORK_ADRESS)
+
   return response.data;
 };
 

@@ -7,13 +7,30 @@ import clearIcon from "../../assets/baseline_clear_black_18dp.png";
 const ActivityCard = props => {
     const { onDelete, activity, onToDetails, forceReload } = props;
 
+    const msToTime = (s) => {
+
+        // Pad to 2 or 3 digits, default is 2
+        function pad(n, z) {
+            z = z || 2;
+            return ('00' + n).slice(-z);
+        }
+
+        let ms = s % 1000;
+        s = (s - ms) / 1000;
+        let secs = s % 60;
+        s = (s - secs) / 60;
+        let mins = s % 60;
+        let hrs = (s - mins) / 60;
+
+        return pad(mins) + ':' + pad(secs) + '.' + pad(ms, 3);
+    }
 
     return (
             <TouchableOpacity  style={styles.itemWrapper} onPress={() => onToDetails(activity)}>
             <Image source={alarmIcon} />
             <View style={styles.text}>
                 <Text>{activity.name}</Text>
-                <Text>{activity.duration}</Text>
+                <Text>{msToTime(activity.duration)}</Text>
             </View>
             <View style={styles.rightAlignedItems}>
                 <View styles={styles.ButtonWrapper}>

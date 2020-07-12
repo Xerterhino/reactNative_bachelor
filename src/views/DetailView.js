@@ -13,7 +13,6 @@ import moment from 'moment'
 import ActivityCard from "../components/ActivityCard";
 
 function Timer({ interval, style }) {
-    // console.log("TIMER")
     const pad = (n) => n < 10 ? '0' + n : n
     const duration = moment.duration(interval)
     const centiseconds = Math.floor(duration.milliseconds() / 10)
@@ -114,14 +113,11 @@ export const DetailView = props => {
 
     const stop = () => {
         clearInterval(timer)
-        // SystemClock.elapsedRealtime() - chronometer.getBase()
         setPaused(new Date().getTime() - start);
-        // setTimer(new Date().getTime() - now)
-        // setStart(0);
-        // setNow(0);
     }
     const reset = () => {
         setStart(0);
+        setPaused(1);
         setNow(0);
     }
     const resume = () => {
@@ -145,7 +141,7 @@ export const DetailView = props => {
 
     const saveAct = async () => {
         try {
-            const response = await updateActivity(activity._id, value, 11111)
+            const response = await updateActivity(activity._id, value, now)
             props.navigation.navigate("Home");
         }catch (e) {
             console.error(e)
@@ -164,10 +160,15 @@ export const DetailView = props => {
                     <ButtonsRow>
                         <RoundButton
                             title='Stop'
-                            color='#8B8B90'
-                            background='#151515'
+                            color='#000000'
+                            background='#FF0500'
                             onPress={() => stop()}
-
+                        />
+                        <RoundButton
+                            title='Reset'
+                            color='#FFFFFF'
+                            background='#002EFF'
+                            onPress={() => reset()}
                         />
                         <RoundButton
                             title='Start'
@@ -179,22 +180,6 @@ export const DetailView = props => {
 
 
             </View>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                 <View style={styles.flexButtonWrapper}>
                     <TextInput
                         style={{ height: 40, borderColor: 'gray', borderWidth: 1, width: '80%' }}
@@ -258,13 +243,11 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: '#0D0D0D',
         alignItems: 'center',
         paddingTop: 130,
         paddingHorizontal: 20,
     },
     timer: {
-        color: '#FFFFFF',
         fontSize: 76,
         fontWeight: '200',
         width: 110,
