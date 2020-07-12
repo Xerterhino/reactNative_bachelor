@@ -12,7 +12,6 @@ import BackgroundFetch from "react-native-background-fetch";
 const Stack = createStackNavigator();
 
 const App = () => {
-
     useEffect(() => {
         PushNotification.configure({
             // (optional) Called when Token is generated (iOS and Android)
@@ -82,35 +81,36 @@ const App = () => {
             // Use a switch statement to route task-handling.
             switch (taskId) {
                 case 'com.background.push':
-                    PushNotification.localNotification({
-                        title: "Check your activities!",
-                        message: "Log something today!",
-                        playSound: true,
-                        soundName: "default",
-                    })
-                    console.log("IOS NOTIFICATION")
-
-                    PushNotificationIOS.presentLocalNotification({
-                        alertTitle: "Check your activities!",
-                        alertBody: "Log something today!",
-                        alertAction: "view"
-                    })
-                    ;
+                    if (Platform.OS === 'ios'){
+                        PushNotificationIOS.presentLocalNotification({
+                            alertTitle: "Check your activities!",
+                            alertBody: "Log something today!",
+                            alertAction: "view"
+                        })
+                    } else{
+                        PushNotification.localNotification({
+                            title: "Check your activities!",
+                            message: "Log something today!",
+                            playSound: true,
+                            soundName: "default",
+                        })
+                    }
                     break;
                 default:
-                    PushNotification.localNotification({
-                        title: "Check your activities!",
-                        message: "Log something today!",
-                        playSound: true,
-                        soundName: "default",
-                    })
-                    console.log("IOS NOTIFICATION")
-
-                    PushNotificationIOS.presentLocalNotification({
-                        alertTitle: "Check your activities!",
-                        alertBody: "Log something today!",
-                        alertAction: "view"
-                    })
+                    if (Platform.OS === 'ios'){
+                        PushNotificationIOS.presentLocalNotification({
+                            alertTitle: "Check your activities!",
+                            alertBody: "Log something today!",
+                            alertAction: "view"
+                        })
+                    } else{
+                        PushNotification.localNotification({
+                            title: "Check your activities!",
+                            message: "Log something today!",
+                            playSound: true,
+                            soundName: "default",
+                        })
+                    }
 
             }
             // Required: Signal completion of your task to native code
@@ -120,7 +120,6 @@ const App = () => {
         }, (error) => {
             console.log("[js] RNBackgroundFetch failed to start");
         });
-
 // Step 2:  Schedule a custom "oneshot" task "com.foo.customtask" to execute 5000ms from now.
         BackgroundFetch.scheduleTask({
             taskId: "com.background.push",
