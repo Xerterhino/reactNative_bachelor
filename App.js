@@ -73,7 +73,8 @@ const App = () => {
             requiresCharging: false,      // Default
             requiresDeviceIdle: false,    // Default
             requiresBatteryNotLow: false, // Default
-            requiresStorageNotLow: false  // Default
+            requiresStorageNotLow: false,
+            // Default
         }, async (taskId) => {
             console.log("[js] Received background-fetch event: ", taskId);
 
@@ -124,7 +125,9 @@ const App = () => {
         BackgroundFetch.scheduleTask({
             taskId: "com.background.push",
             forceAlarmManager: true,
-            delay: 500  // <-- milliseconds
+            delay: 500,  // <-- milliseconds,
+            periodic: true,
+            enableHeadless: true,
         }).catch(e => console.error(e));
     }, [])
 
