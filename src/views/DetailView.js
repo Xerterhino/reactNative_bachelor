@@ -17,7 +17,7 @@ function Timer({ interval, style }) {
     const duration = moment.duration(interval)
     const centiseconds = Math.floor(duration.milliseconds() / 10)
     return (
-        <View style={styles.timerContainer}>
+        <View style={styles.tsuimerContainer}>
             <Text style={style}>{pad(duration.minutes())}:</Text>
             <Text style={style}>{pad(duration.seconds())},</Text>
             <Text style={style}>{pad(centiseconds)}</Text>

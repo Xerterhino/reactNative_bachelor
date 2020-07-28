@@ -78,17 +78,18 @@ const App = () => {
         }, async (taskId) => {
             console.log("[js] Received background-fetch event: ", taskId);
 
-
             // Use a switch statement to route task-handling.
             switch (taskId) {
                 case 'com.background.push':
                     if (Platform.OS === 'ios'){
+                        console.log("SHOW NOTIFICATION IOS")
                         PushNotificationIOS.presentLocalNotification({
                             alertTitle: "Check your activities!",
                             alertBody: "Log something today!",
                             alertAction: "view"
                         })
                     } else{
+                        console.log("SHOW NOTIFICATION ANDROID")
                         PushNotification.localNotification({
                             title: "Check your activities!",
                             message: "Log something today!",
@@ -125,10 +126,10 @@ const App = () => {
         BackgroundFetch.scheduleTask({
             taskId: "com.background.push",
             forceAlarmManager: true,
-            delay: 500,  // <-- milliseconds,
+            delay: 30000,  // <-- milliseconds,
             periodic: true,
             enableHeadless: true,
-        }).catch(e => console.error(e));
+        }).catch(e => console.error('Cant schedule Task com.background.push ', e));
     }, [])
 
   return (
