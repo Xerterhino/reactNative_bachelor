@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { AppRegistry } from 'react-native';
 import 'react-native-gesture-handler';
 import { RoutingWrapper } from "./src/utils/routing/routingContext";
 import {ActivityScrollView} from "./src/views/ActivitySrollView";
@@ -73,12 +74,10 @@ const App = () => {
             requiresCharging: false,      // Default
             requiresDeviceIdle: false,    // Default
             requiresBatteryNotLow: false, // Default
-            requiresStorageNotLow: false,
-            // Default
+            requiresStorageNotLow: false  // Default
         }, async (taskId) => {
             console.log("[js] Received background-fetch event: ", taskId);
 
-            // Use a switch statement to route task-handling.
             switch (taskId) {
                 case 'com.background.push':
                     if (Platform.OS === 'ios'){
@@ -100,12 +99,14 @@ const App = () => {
                     break;
                 default:
                     if (Platform.OS === 'ios'){
+                        console.log("SHOW NOTIFICATION IOS")
                         PushNotificationIOS.presentLocalNotification({
                             alertTitle: "Check your activities!",
                             alertBody: "Log something today!",
                             alertAction: "view"
                         })
                     } else{
+                        console.log("SHOW NOTIFICATION ANDROID")
                         PushNotification.localNotification({
                             title: "Check your activities!",
                             message: "Log something today!",
@@ -122,13 +123,15 @@ const App = () => {
         }, (error) => {
             console.log("[js] RNBackgroundFetch failed to start");
         });
-// Step 2:  Schedule a custom "oneshot" task "com.foo.customtask" to execute 5000ms from now.
+
         BackgroundFetch.scheduleTask({
             taskId: "com.background.push",
             forceAlarmManager: true,
             delay: 30000,  // <-- milliseconds,
             periodic: true,
             enableHeadless: true,
+            startOnBoot: true,
+            stopOnTerminate: false,
         }).catch(e => console.error('Cant schedule Task com.background.push ', e));
     }, [])
 
@@ -144,28 +147,3 @@ const App = () => {
   );
 };
 export default App;
-//
-// const Stack = createStackNavigator(
-//     {
-//       Start: {
-//         screen: ActivityScrollView,
-//         navigationOptions: {
-//           title: "Home"
-//         }
-//       },
-//     },
-//     {
-//       // initialRouteName: "Start",
-//       defaultNavigationOptions: {
-//         headerStyle: {
-//           backgroundColor: "#44DB5E"
-//         },
-//         headerTintColor: "#fff",
-//         headerTitleStyle: {
-//           fontWeight: "bold"
-//         }
-//       }
-//     }
-// );
-//
-// const AppContainer = createAppContainer(Stack);
