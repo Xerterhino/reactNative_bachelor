@@ -8,16 +8,15 @@ import {
 import { BackButton } from "../components/BackButton";
 import { MenuButton } from "../components/MenuButton";
 import { routingCtx } from "../utils/routing/routingContext";
-import {createActivity, deleteActivity, fetchAllActivies, updateActivity} from "../actions/activities";
+import {updateActivity} from "../actions/activities";
 import moment from 'moment'
-import ActivityCard from "../components/ActivityCard";
 
 function Timer({ interval, style }) {
     const pad = (n) => n < 10 ? '0' + n : n
     const duration = moment.duration(interval)
     const centiseconds = Math.floor(duration.milliseconds() / 10)
     return (
-        <View style={styles.tsuimerContainer}>
+        <View style={styles.timerContainer}>
             <Text style={style}>{pad(duration.minutes())}:</Text>
             <Text style={style}>{pad(duration.seconds())},</Text>
             <Text style={style}>{pad(centiseconds)}</Text>
@@ -32,50 +31,13 @@ function RoundButton({ title, color, background, onPress, disabled }) {
             style={[ styles.button, { backgroundColor: background }]}
             activeOpacity={disabled ? 1.0 : 0.7}
         >
-            <View style={styles.buttonBorder}>
+            <View>
                 <Text style={[ styles.buttonTitle, { color }]}>{title}</Text>
             </View>
         </TouchableOpacity>
     )
 }
-function Lap({ number, interval, fastest, slowest }) {
-    const lapStyle = [
-        styles.lapText,
-        fastest && styles.fastest,
-        slowest && styles.slowest,
-    ]
-    return (
-        <View style={styles.lap}>
-            <Text style={lapStyle}>Lap {number}</Text>
-            <Timer style={[lapStyle, styles.lapTimer]} interval={interval}/>
-        </View>
-    )
-}
 
-function LapsTable({ laps, timer }) {
-    const finishedLaps = laps.slice(1)
-    let min = Number.MAX_SAFE_INTEGER
-    let max = Number.MIN_SAFE_INTEGER
-    if (finishedLaps.length >= 2) {
-        finishedLaps.forEach(lap => {
-            if (lap < min) min = lap
-            if (lap > max) max = lap
-        })
-    }
-    return (
-        <ScrollView style={styles.scrollView}>
-            {laps.map((lap, index) => (
-                <Lap
-                    number={laps.length - index}
-                    key={laps.length - index}
-                    interval={index === 0 ? timer + lap : lap}
-                    fastest={lap === min}
-                    slowest={lap === max}
-                />
-            ))}
-        </ScrollView>
-    )
-}
 
 function ButtonsRow({ children }) {
     return (
@@ -182,7 +144,7 @@ export const DetailView = props => {
             </View>
                 <View style={styles.flexButtonWrapper}>
                     <TextInput
-                        style={{ height: 40, borderColor: 'gray', borderWidth: 1, width: '80%' }}
+                        style={{ height: 40, borderColor: 'gray', borderWidth: 1, width: '80%', color: 'black' }}
                         onChangeText={text => onChangeText(text)}
                         value={value}
                     />
@@ -254,8 +216,7 @@ const styles = StyleSheet.create({
     },
     button: {
         width: 80,
-        height: 80,
-        borderRadius: 40,
+        height: 60,
         justifyContent: 'center',
         alignItems: 'center',
     },
