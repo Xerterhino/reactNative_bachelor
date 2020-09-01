@@ -199,10 +199,6 @@ const styles = StyleSheet.create({
     header: {
         fontSize: 25
     },
-
-
-
-
     container: {
         flex: 1,
         alignItems: 'center',
@@ -263,5 +259,12 @@ const styles = StyleSheet.create({
     },
     timerContainer: {
         flexDirection: 'row',
+
+
+        fontSize: Platform.OS === 'ios' ? 25 : 20,
+        color: Platform.OS === 'android' ? 'red' : 'green'
+
+
+
     }
 });

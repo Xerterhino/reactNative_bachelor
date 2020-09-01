@@ -64,8 +64,9 @@ export const ActivityScrollView = props => {
     );
 
     const onGoToDetails = activity => {
-        // navigateToRoute(props.navigation, "Detail", { activity: activity });
+
         props.navigation.navigate('Details', { activity: activity })
+
     };
     const onDelete = async (id) => {
         try {
@@ -131,7 +132,7 @@ ActivityScrollView.navigationOptions = props => ({
 
 const styles = StyleSheet.create({
     viewContainer: {
-        flex: 1,
+        flex: Platform.OS === 'ios' ? 1 : 1,
         alignItems: "center",
     },
     footerButton: {},
@@ -152,7 +153,11 @@ const styles = StyleSheet.create({
         width: "95%",
         paddingBottom: "2%"
     },
+
     header: {
-        fontSize: 25
+        fontSize: Platform.OS === 'ios' ? 25 : 20,
+        color: Platform.OS === 'android' ? 'red' : 'green'
     }
+
+
 });

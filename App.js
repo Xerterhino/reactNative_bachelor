@@ -10,85 +10,50 @@ import PushNotification from "react-native-push-notification";
 import PushNotificationIOS from "@react-native-community/push-notification-ios";
 import BackgroundFetch from "react-native-background-fetch";
 
-const Stack = createStackNavigator();
 
 const App = () => {
     useEffect(() => {
         PushNotification.configure({
-            // (optional) Called when Token is generated (iOS and Android)
             onRegister: function (token) {
                 console.log("TOKEN:", token);
             },
-
-            // (required) Called when a remote is received or opened, or local notification is opened
             onNotification: function (notification) {
                 console.log("NOTIFICATION:", notification);
-
-                // process the notification
-
-                // (required) Called when a remote is received or opened, or local notification is opened
                 notification.finish(PushNotificationIOS.FetchResult.NoData);
             },
 
-            // (optional) Called when Registered Action is pressed and invokeApp is false, if true onNotification will be called (Android)
             onAction: function (notification) {
                 console.log("ACTION:", notification.action);
                 console.log("NOTIFICATION:", notification);
-
-                // process the action
             },
-
-            // (optional) Called when the user fails to register for remote notifications. Typically occurs when APNS is having issues, or the device is a simulator. (iOS)
             onRegistrationError: function(err) {
                 console.error(err.message, err);
             },
-
-            // IOS ONLY (optional): default: all - Permissions to register.
-            permissions: {
-                alert: true,
-                badge: true,
-                sound: true,
-            },
-
-            // Should the initial notification be popped automatically
-            // default: true
             popInitialNotification: true,
-
-            /**
-             * (optional) default: true
-             * - Specified if permissions (ios) and token (android and ios) will requested or not,
-             * - if not, you must call PushNotificationsHandler.requestPermissions() later
-             * - if you are not using remote notification or do not have Firebase installed, use this:
-             *     requestPermissions: Platform.OS === 'ios'
-             */
             requestPermissions: Platform.OS === 'ios',
         });
 
         BackgroundFetch.configure({
-            minimumFetchInterval: 15,     // <-- minutes (15 is minimum allowed)
-            // Android options
-            forceAlarmManager: false,     // <-- Set true to bypass JobScheduler.
+            minimumFetchInterval: 15,
+            forceAlarmManager: false,
             stopOnTerminate: false,
             startOnBoot: true,
-            requiredNetworkType: BackgroundFetch.NETWORK_TYPE_NONE, // Default
-            requiresCharging: false,      // Default
-            requiresDeviceIdle: false,    // Default
-            requiresBatteryNotLow: false, // Default
-            requiresStorageNotLow: false  // Default
-        }, async (taskId) => {
-            console.log("[js] Received background-fetch event: ", taskId);
-
+            requiredNetworkType: BackgroundFetch.NETWORK_TYPE_NONE,
+            requiresCharging: false,
+            requiresDeviceIdle: false,
+            requiresBatteryNotLow: false,
+            requiresStorageNotLow: false
+        },
+            async (taskId) => {
             switch (taskId) {
                 case 'com.background.push':
                     if (Platform.OS === 'ios'){
-                        console.log("SHOW NOTIFICATION IOS")
                         PushNotificationIOS.presentLocalNotification({
                             alertTitle: "Check your activities!",
                             alertBody: "Log something today!",
                             alertAction: "view"
                         })
                     } else{
-                        console.log("SHOW NOTIFICATION ANDROID")
                         PushNotification.localNotification({
                             title: "Check your activities!",
                             message: "Log something today!",
@@ -97,42 +62,26 @@ const App = () => {
                         })
                     }
                     break;
-                default:
-                    if (Platform.OS === 'ios'){
-                        console.log("SHOW NOTIFICATION IOS")
-                        PushNotificationIOS.presentLocalNotification({
-                            alertTitle: "Check your activities!",
-                            alertBody: "Log something today!",
-                            alertAction: "view"
-                        })
-                    } else{
-                        console.log("SHOW NOTIFICATION ANDROID")
-                        PushNotification.localNotification({
-                            title: "Check your activities!",
-                            message: "Log something today!",
-                            playSound: true,
-                            soundName: "default",
-                        })
-                    }
-
             }
-            // Required: Signal completion of your task to native code
-            // If you fail to do this, the OS can terminate your app
-            // or assign battery-blame for consuming too much background-time
             BackgroundFetch.finish(taskId);
-        }, (error) => {
+        },
+            (error) => {
             console.log("[js] RNBackgroundFetch failed to start");
         });
+
 
         BackgroundFetch.scheduleTask({
             taskId: "com.background.push",
             forceAlarmManager: true,
-            delay: 30000,  // <-- milliseconds,
+            delay: 30000,
             periodic: true,
             enableHeadless: true,
             startOnBoot: true,
             stopOnTerminate: false,
         }).catch(e => console.error('Cant schedule Task com.background.push ', e));
+
+
+
     }, [])
 
   return (
@@ -146,4 +95,7 @@ const App = () => {
     </NavigationContainer>
   );
 };
+
+const Stack = createStackNavigator();
+
 export default App;
